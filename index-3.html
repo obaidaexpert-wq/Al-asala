@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الأصالة للفحص الفني</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#e9ecf0; --card:#ffffff; --ink:#1b2430; --muted:#5d6877; --line:#d5dae1;
+  --band:#1b2430; --band-ink:#ffffff; --accent:#0e7c86; --accent-ink:#ffffff;
+  --ok:#1f7a4d; --ok-bg:#dff2e7; --need:#b36b00; --need-bg:#fdecc8; --na:#5d6877; --na-bg:#e6e9ee;
+  --wa:#1faa59;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#1a222d; --ink:#e8edf3; --muted:#9aa6b6; --line:#2e3948;
+    --band:#0a0e13; --band-ink:#ffffff; --accent:#35b3bf; --accent-ink:#06191b;
+    --ok:#5fd394; --ok-bg:#16382a; --need:#f2b447; --need-bg:#40300f; --na:#9aa6b6; --na-bg:#27303c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10151c; --card:#1a222d; --ink:#e8edf3; --muted:#9aa6b6; --line:#2e3948;
+  --band:#0a0e13; --band-ink:#ffffff; --accent:#35b3bf; --accent-ink:#06191b;
+  --ok:#5fd394; --ok-bg:#16382a; --need:#f2b447; --need-bg:#40300f; --na:#9aa6b6; --na-bg:#27303c;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 120px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Cairo",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;font-size:16px;line-height:1.55}
+.app{max-width:760px;margin:0 auto;padding:0 12px 120px}
+.brand{display:flex;align-items:center;gap:12px;padding:14px 4px 10px}
+.brand svg{width:96px;height:auto;flex:none;color:var(--ink)}
+.brand h1{margin:0;font-size:22px;font-weight:800;line-height:1.2}
+.brand p{margin:0;font-size:12px;color:var(--muted);letter-spacing:.02em}
+.brand .tag{font-size:12px;color:var(--accent);font-weight:600}
+
+.steps{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:6px 0 8px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.step{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:6px 2px 7px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;text-align:center;line-height:1.25}
+.step small{display:block;font-weight:400;font-size:11px;color:var(--muted)}
+.step[aria-current="step"]{background:var(--band);color:var(--band-ink);border-color:var(--band)}
+.step[aria-current="step"] small{color:#c9d1db}
+.step:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.sheet{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px}
+.band{background:var(--band);color:var(--band-ink);padding:10px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:800;font-size:17px}
+.band span{font-weight:400;font-size:13px;opacity:.85;direction:ltr}
+.body{padding:14px}
+.page{display:none}
+.page.on{display:block}
+
+.fig{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:14px}
+.fig svg{display:block;width:100%;height:auto;color:var(--ink)}
+.fig.row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.fig.row .wide{grid-column:1/-1}
+svg .s{stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+svg .f{fill:var(--card);stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+svg .t{fill:var(--muted);font-family:"Cairo",sans-serif;font-size:11px}
+svg .l{stroke:var(--muted);stroke-width:1;fill:none}
+svg .hl{fill:var(--accent);opacity:.18}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.field label,.lbl{font-size:13px;font-weight:600}
+.field label em,.lbl em{font-style:normal;font-weight:400;color:var(--muted);font-size:12px;margin-inline-start:4px}
+input[type=text],input[type=tel],input[type=date],input[type=number],textarea{width:100%;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px}
+textarea{min-height:84px;resize:vertical}
+.ltr{direction:ltr;text-align:left}
+.group-title{margin:16px 0 8px;font-weight:800;font-size:15px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer;min-height:40px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.cond{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.cond .chip{border-radius:10px;padding:8px 2px;text-align:center;line-height:1.25;font-size:14px}
+.cond .chip small{display:block;font-size:11px;opacity:.8}
+
+.item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.item .nm{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px;font-weight:600}
+.item .nm small{color:var(--muted);font-weight:400;direction:ltr;font-size:12px}
+.seg{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:6px}
+.seg button{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:9px;padding:8px 2px;font:inherit;font-size:14px;cursor:pointer;min-height:42px;line-height:1.2}
+.seg button small{display:block;font-size:10px;opacity:.85}
+.seg button[aria-pressed="true"].ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok);font-weight:800}
+.seg button[aria-pressed="true"].needs{background:var(--need-bg);color:var(--need);border-color:var(--need);font-weight:800}
+.seg button[aria-pressed="true"].na{background:var(--na-bg);color:var(--na);border-color:var(--na);font-weight:800}
+.item .inote{display:none;margin-top:8px}
+.item.has-need .inote{display:block}
+
+.nav{position:fixed;inset-inline:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px))}
+.nav div{max-width:760px;margin:0 auto;display:flex;gap:10px}
+.btn{flex:1;border:0;border-radius:12px;padding:12px 14px;font:inherit;font-weight:800;font-size:16px;cursor:pointer;min-height:48px;background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);font-weight:600}
+.btn.wa{background:var(--wa);color:#fff}
+a.btn{display:flex;align-items:center;justify-content:center;text-decoration:none}
+[hidden]{display:none!important}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.sum div{border-radius:10px;padding:10px 4px;text-align:center;font-weight:800;font-size:22px;line-height:1.2}
+.sum div small{display:block;font-weight:400;font-size:12px}
+.sum .a{background:var(--ok-bg);color:var(--ok)} .sum .b{background:var(--need-bg);color:var(--need)} .sum .c{background:var(--na-bg);color:var(--na)}
+.needlist{margin:0 0 10px;padding-inline-start:20px;font-size:14px}
+.msg{white-space:pre-wrap;background:var(--bg);border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:13px;max-height:220px;overflow:auto}
+.hint{font-size:12px;color:var(--muted);margin:6px 0}
+.err{color:var(--need);font-size:13px;font-weight:600;min-height:20px}
+.themebtn{margin-inline-start:auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+
+
+.edtool{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.edtool .chip{font-size:13px}
+.item.edit .field{margin-bottom:8px}
+.eact{display:flex;gap:8px;margin-top:4px}
+.eact .chip{min-width:44px}
+.eact .chip[disabled]{opacity:.35}
+.chip.dng{margin-inline-start:auto;border-color:var(--need);color:var(--need)}
+.addbtn{width:100%;flex:none;margin:6px 0 10px}
+
+.brand #brandLogo{flex:none;display:block}
+.logoimg{display:block;max-width:96px;max-height:64px;object-fit:contain}
+.figimg{display:block;width:100%;height:auto;border-radius:8px}
+#cust{position:fixed;inset:0;z-index:30;background:var(--bg);overflow:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.custin{max-width:760px;margin:0 auto;padding:0 12px 40px}
+.custhead{position:sticky;top:0;background:var(--bg);display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:18px;z-index:2}
+.logoprev{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;display:flex;justify-content:center;color:var(--ink)}
+.logoprev .logoimg{max-width:200px;max-height:110px}
+.logoprev svg{width:140px;height:auto}
+.cgrp{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+.cgrp>b{display:block;margin-bottom:6px;font-size:14px}
+.cgrp .field{margin-bottom:6px}
+.cgrp .field label{font-size:12px;color:var(--muted)}
+.figrow{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+.figprev{background:var(--bg);border-radius:8px;padding:6px;margin:6px 0;max-height:150px;overflow:hidden;text-align:center}
+.figprev .figimg{max-height:140px;width:auto;margin:0 auto}
+.chip{display:inline-flex;align-items:center;text-decoration:none}
+.rlogo .logoimg{display:block;width:auto;max-width:110px;max-height:62px;object-fit:contain}
+.rh.big .rlogo .logoimg{max-width:240px;max-height:120px}
+
+label.chip{position:relative;overflow:hidden;cursor:pointer}
+label.chip input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0;z-index:1}
+
+.opts{border-top:1px dashed var(--line);margin-top:6px;padding-top:8px}
+.opts .lbl{margin-bottom:6px}
+.orow{border:1px solid var(--line);border-radius:10px;padding:8px;margin-bottom:8px}
+.orow .field{margin-bottom:6px}
+.orow .tones{display:flex;gap:6px;flex-wrap:wrap}
+.orow .tones .chip{min-height:34px;padding:4px 12px;font-size:13px}
+.orow .tones .chip[data-otone="ok"][aria-pressed="true"]{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+.orow .tones .chip[data-otone="needs"][aria-pressed="true"]{background:var(--need-bg);color:var(--need);border-color:var(--need)}
+.orow .tones .chip[data-otone="na"][aria-pressed="true"]{background:var(--na-bg);color:var(--na);border-color:var(--na)}
+.opts .hint{margin:4px 0 8px}
+/* ===== report ===== */
+#reportRoot{padding:0 0 40px}
+.rtool{position:sticky;top:0;z-index:6;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px}
+.rtool .chip{min-height:38px;padding:6px 12px}
+.rtool .btn{flex:none;min-height:38px;padding:6px 14px;font-size:14px}
+.rpage{--accent:#0e7c86;--ink:#1b2430;--muted:#5d6877;--line:#d5dae1;--card:#fff;
+  background:#fff;color:#1b2430;max-width:794px;margin:12px auto;padding:20px 20px 12px;border:1px solid #d5dae1;border-radius:6px;
+  display:flex;flex-direction:column;min-height:calc(min(100vw,794px)*1.3);font-size:14px}
+.rh{display:flex;align-items:center;gap:12px;padding-bottom:10px;border-bottom:2px solid #1b2430;margin-bottom:12px}
+.rlogo svg{display:block;width:88px;height:auto;color:#1b2430}
+.rname{display:flex;flex-direction:column;line-height:1.3}
+.rname b{font-size:19px;font-weight:800}
+.rname span{font-size:10px;color:#5d6877;text-align:start}
+.rname i{font-style:normal;font-size:12px;color:#0e7c86;font-weight:600}
+.rh.big{flex-direction:column;text-align:center;border-bottom:0;padding:6px 0 12px;gap:8px}
+.rh.big .rlogo svg{width:190px}
+.rh.big .rname{align-items:center}
+.rh.big .rname b{font-size:28px}
+.rh.big .rname span{font-size:11px;text-align:center}
+.rband{background:#1b2430;color:#fff;border-radius:6px;padding:8px 14px;font-weight:800;font-size:17px;display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin:6px 0 10px}
+.rband span{font-weight:400;font-size:12px;opacity:.85}
+.rpage h3{margin:14px 0 6px;font-size:15px}
+.rpage h4{margin:8px 0 2px;font-size:13px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}
+.kv div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted #aab3bf;padding:6px 0}
+.kv span{color:#5d6877}
+.kv b{font-weight:600;text-align:end;overflow-wrap:anywhere}
+.cb{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0}
+.cb div{border:1px solid #d5dae1;border-radius:8px;padding:8px 2px;text-align:center;font-weight:600}
+.cb div.on{background:#1b2430;color:#fff;border-color:#1b2430}
+.cs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0}
+.cs div{border-radius:8px;padding:8px 2px;text-align:center;font-weight:800;font-size:22px;line-height:1.2}
+.cs small{display:block;font-weight:400;font-size:12px}
+.cs .a{background:#dff2e7;color:#1f7a4d}.cs .b{background:#fdecc8;color:#b36b00}.cs .c{background:#e6e9ee;color:#5d6877}
+.rt{width:100%;border-collapse:collapse;margin:4px 0 8px}
+.rt th{background:#eef0f3;font-size:12px;text-align:start;padding:6px 8px;border:1px solid #d5dae1}
+.rt td{padding:7px 8px;border:1px solid #d5dae1;vertical-align:top}
+.rt td.in{font-weight:600}
+.rt td.nt{color:#5d6877;font-size:13px}
+.st{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:800;white-space:nowrap}
+.st.ok{background:#dff2e7;color:#1f7a4d}.st.needs{background:#fdecc8;color:#b36b00}.st.na{background:#e6e9ee;color:#5d6877}.st.none{color:#9aa3af}
+.nbox{border:1px solid #d5dae1;border-radius:8px;padding:8px 10px;margin:6px 0}
+.nbox b{font-size:12px;color:#5d6877}
+.nbox p{margin:4px 0 0;min-height:44px;white-space:pre-wrap}
+.attn ul{margin:2px 0 4px;padding-inline-start:20px}
+.sigs{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+.sigs div{border-top:1px solid #1b2430;padding-top:4px;font-size:12px;color:#5d6877;min-height:34px}
+.sigs div p{margin:0 0 18px;color:#1b2430;font-weight:600;font-size:14px}
+.rf{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;font-size:11px;color:#5d6877}
+@media print{
+  @page{size:A4;margin:0}
+  html,body{background:#fff!important}
+  .app,.nav,.rtool{display:none!important}
+  #reportRoot{padding:0}
+  .rpage{margin:0;border:0;border-radius:0;max-width:none;width:210mm;min-height:296mm;padding:12mm 13mm 8mm;break-after:page;page-break-after:always}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="brand">
+  <span id="brandLogo"></span>
+  <div>
+    <h1 id="brName">الأصالة للفحص الفني</h1>
+    <p id="brEn" dir="ltr" style="text-align:right">AL ASALA VEHICLE TECHNICAL INSPECTION CENTER</p>
+    <p class="tag" id="brTag">سلامة • جودة • ثقة</p>
+  </div>
+  <button class="themebtn" id="custBtn" type="button" aria-label="تخصيص">⚙️</button>
+  <button class="themebtn" id="themeBtn" type="button" aria-label="تبديل الوضع" style="margin-inline-start:0">◐</button>
+</header>
+
+<nav class="steps" id="steps" aria-label="صفحات الفحص"></nav>
+
+<!-- PAGE 1 -->
+<section class="page on" data-page="0">
+ <div class="sheet">
+  <div class="band">تقرير فحص السيارة <span>VEHICLE INSPECTION REPORT</span></div>
+  <div class="body">
+   <div class="group-title" style="margin-top:0">معلومات الزبون <span class="hint">Customer</span></div>
+   <div class="field"><label for="cName">اسم الزبون <em>Customer name</em></label><input type="text" id="cName" data-info="cName" autocomplete="off"></div>
+   <div class="field"><label for="cPhone">رقم الواتساب <em>WhatsApp number</em></label><input type="tel" id="cPhone" class="ltr" data-info="cPhone" placeholder="05XXXXXXXX" inputmode="tel"></div>
+
+   <div class="group-title">معلومات السيارة <span class="hint">Vehicle</span></div>
+   <div class="field"><label for="model">الموديل <em>Vehicle model</em></label><input type="text" id="model" data-info="model"></div>
+   <div class="grid2">
+     <div class="field"><label for="plate">رقم اللوحة <em>Plate</em></label><input type="text" id="plate" class="ltr" data-info="plate"></div>
+     <div class="field"><label for="color">اللون <em>Color</em></label><input type="text" id="color" data-info="color"></div>
+   </div>
+   <div class="field"><label for="vin">رقم الشاسيه <em>Chassis / VIN</em></label><input type="text" id="vin" class="ltr" data-info="vin" autocapitalize="characters"></div>
+   <div class="grid2">
+     <div class="field"><label for="date">تاريخ الفحص <em>Date</em></label><input type="date" id="date" class="ltr" data-info="date"></div>
+     <div class="field"><label for="km">عدد الكيلومترات <em>Mileage</em></label><input type="number" id="km" class="ltr" data-info="km" inputmode="numeric"></div>
+   </div>
+   <div class="lbl">نوع المركبة <em>Vehicle type</em></div>
+   <div class="chips" id="vtype"></div>
+
+   <div class="group-title">الحالة العامة <span class="hint">General condition</span></div>
+   <div class="cond" id="cond"></div>
+   <div class="field"><label for="gnotes">ملاحظات عامة <em>General notes</em></label><textarea id="gnotes" data-info="gnotes"></textarea></div>
+   <div class="field"><label for="inspector">اسم الفاحص <em>Inspector</em></label><input type="text" id="inspector" data-info="inspector"></div>
+  </div>
+ </div>
+</section>
+
+<!-- PAGE 2 BODY -->
+<section class="page" data-page="1">
+ <div class="sheet">
+  <div class="band" data-band="body"></div>
+  <div class="body">
+   <div data-fig="body" class="fig row">
+    <svg viewBox="0 0 160 100" role="img" aria-label="منظر أمامي">
+      <path class="f" d="M18 74 L18 58 Q20 48 34 44 L46 24 Q52 16 66 16 L94 16 Q108 16 114 24 L126 44 Q140 48 142 58 L142 74 Z"/>
+      <path class="s" d="M50 42 L58 26 Q60 22 66 22 L94 22 Q100 22 102 26 L110 42 Z"/>
+      <rect class="f" x="24" y="52" width="26" height="12" rx="5"/><rect class="f" x="110" y="52" width="26" height="12" rx="5"/>
+      <path class="s" d="M62 60 H98 M66 68 H94"/>
+      <rect class="f" x="24" y="74" width="20" height="14" rx="3"/><rect class="f" x="116" y="74" width="20" height="14" rx="3"/>
+      <text class="t" x="80" y="98" text-anchor="middle">أمامي</text>
+    </svg>
+    <svg viewBox="0 0 160 100" role="img" aria-label="منظر خلفي">
+      <path class="f" d="M18 74 L18 58 Q20 48 32 44 L48 24 Q54 16 68 16 L92 16 Q106 16 112 24 L128 44 Q140 48 142 58 L142 74 Z"/>
+      <path class="s" d="M52 42 L60 26 Q62 22 68 22 L92 22 Q98 22 100 26 L108 42 Z"/>
+      <rect class="f" x="22" y="50" width="22" height="12" rx="4"/><rect class="f" x="116" y="50" width="22" height="12" rx="4"/>
+      <rect class="s" x="64" y="56" width="32" height="10" rx="2"/>
+      <rect class="f" x="24" y="74" width="20" height="14" rx="3"/><rect class="f" x="116" y="74" width="20" height="14" rx="3"/>
+      <text class="t" x="80" y="98" text-anchor="middle">خلفي</text>
+    </svg>
+    <svg class="wide" viewBox="0 0 330 112" role="img" aria-label="منظر جانبي">
+      <path class="f" d="M20 80 L20 64 Q22 56 40 54 L80 48 Q102 24 142 22 L192 22 Q224 24 244 48 L288 54 Q304 58 304 72 L304 80 Z"/>
+      <path class="s" d="M92 48 Q108 30 142 29 L152 29 L152 48 Z M162 29 L192 29 Q214 31 230 48 L162 48 Z"/>
+      <path class="s" d="M152 48 V76 M162 48 V76 M96 62 H108 M214 62 H226"/>
+      <circle class="f" cx="78" cy="82" r="17"/><circle class="s" cx="78" cy="82" r="7"/>
+      <circle class="f" cx="248" cy="82" r="17"/><circle class="s" cx="248" cy="82" r="7"/>
+      <text class="t" x="165" y="108" text-anchor="middle">جانبي</text>
+    </svg>
+    <svg class="wide" viewBox="0 0 330 150" role="img" aria-label="منظر علوي">
+      <path class="f" d="M12 75 C12 40 30 22 62 20 L90 18 C110 22 120 28 150 28 L206 28 C250 28 280 36 300 52 C314 62 314 88 300 98 C280 114 250 122 206 122 L150 122 C120 122 110 128 90 132 L62 130 C30 128 12 110 12 75 Z" transform="translate(0 -1)"/>
+      <path class="s" d="M112 36 L156 40 L156 110 L112 114 Q102 75 112 36 Z M218 42 L252 52 Q262 75 252 98 L218 108 Z"/>
+      <rect class="s" x="160" y="44" width="54" height="62" rx="8"/>
+      <rect class="f" x="62" y="10" width="26" height="9" rx="3"/><rect class="f" x="62" y="131" width="26" height="9" rx="3"/>
+      <rect class="f" x="232" y="14" width="26" height="9" rx="3"/><rect class="f" x="232" y="127" width="26" height="9" rx="3"/>
+      <text class="t" x="165" y="78" text-anchor="middle">السقف</text>
+      <text class="t" x="36" y="78" text-anchor="middle">الغطاء</text>
+    </svg>
+   </div>
+   <div id="list-body"></div>
+   <div class="field"><label for="n-body">ملاحظات الهيكل <em>Body notes</em></label><textarea id="n-body" data-pn="body"></textarea></div>
+  </div>
+ </div>
+</section>
+
+<!-- PAGE 3 ENGINE -->
+<section class="page" data-page="2">
+ <div class="sheet">
+  <div class="band" data-band="engine"></div>
+  <div class="body">
+   <div data-fig="engine" class="fig">
+    <svg viewBox="0 0 340 230" role="img" aria-label="رسم مبسط للمحرك">
+      <rect class="f" x="20" y="14" width="64" height="34" rx="5"/><path class="s" d="M32 14 v-5 h10 v5 M62 14 v-5 h10 v5"/><text class="t" x="52" y="35" text-anchor="middle">+ −</text>
+      <rect class="f" x="96" y="22" width="60" height="30" rx="6"/><path class="s" d="M104 32 h44 M104 40 h44"/>
+      <rect class="f" x="252" y="14" width="64" height="40" rx="14"/><path class="s" d="M252 34 h64"/>
+      <rect class="f" x="110" y="66" width="130" height="26" rx="5"/>
+      <path class="s" d="M128 66 v-9 M152 66 v-9 M176 66 v-9 M200 66 v-9 M224 66 v-9"/>
+      <rect class="f" x="104" y="92" width="142" height="86" rx="8"/>
+      <path class="s" d="M104 118 h142 M104 146 h142 M150 92 v86 M198 92 v86"/>
+      <path class="f" d="M118 178 h114 l-10 22 h-94 Z"/>
+      <circle class="f" cx="262" cy="136" r="22"/><circle class="s" cx="262" cy="136" r="9"/>
+      <path class="s" d="M246 92 L262 114"/>
+      <circle class="f" cx="86" cy="136" r="14"/><path class="s" d="M100 136 h4"/>
+      <rect class="f" x="14" y="92" width="30" height="96" rx="4"/><path class="s" d="M14 108 h30 M14 124 h30 M14 140 h30 M14 156 h30 M14 172 h30"/>
+      <path class="s" d="M44 104 H96 M44 176 H104 M316 40 L330 40 L330 100 L270 112"/>
+      <circle class="s" cx="176" cy="205" r="0"/>
+      <rect class="f" x="268" y="176" width="40" height="30" rx="6"/>
+      <path class="l" d="M52 14 L34 4 M126 22 L126 8 M284 14 L300 4 M29 92 L16 80 M288 176 L300 214 M176 135 L176 150"/>
+      <text class="t" x="34" y="2">البطارية</text><text class="t" x="108" y="6">فلتر الهواء</text><text class="t" x="296" y="2" text-anchor="middle">خزان التبريد</text>
+      <text class="t" x="29" y="78" text-anchor="middle">المبرّد</text><text class="t" x="288" y="224" text-anchor="middle">خزان الزيت</text><text class="t" x="176" y="164" text-anchor="middle">المحرك</text>
+    </svg>
+   </div>
+   <div id="list-engine"></div>
+   <div class="field"><label for="n-engine">ملاحظات المحرك <em>Engine notes</em></label><textarea id="n-engine" data-pn="engine"></textarea></div>
+  </div>
+ </div>
+</section>
+
+<!-- PAGE 4 GEARBOX -->
+<section class="page" data-page="3">
+ <div class="sheet">
+  <div class="band" data-band="gear"></div>
+  <div class="body">
+   <div data-fig="gear" class="fig">
+    <svg viewBox="0 0 340 200" role="img" aria-label="رسم مبسط للقير">
+      <path class="f" d="M30 40 Q16 40 16 80 L16 120 Q16 160 30 160 L84 160 L84 40 Z"/>
+      <circle class="s" cx="50" cy="100" r="26"/><circle class="s" cx="50" cy="100" r="10"/>
+      <path class="f" d="M84 34 L214 52 Q232 56 232 74 L232 126 Q232 144 214 148 L84 166 Z"/>
+      <path class="s" d="M118 44 v112 M154 50 v100 M190 56 v88"/>
+      <rect class="f" x="232" y="88" width="76" height="24" rx="4"/><path class="s" d="M250 88 v24 M270 88 v24"/>
+      <rect class="f" x="300" y="82" width="26" height="36" rx="4"/>
+      <path class="f" d="M118 166 h100 v14 h-100 Z"/>
+      <rect class="f" x="130" y="12" width="60" height="22" rx="4"/><path class="s" d="M144 12 v-6 h32 v6"/>
+      <path class="l" d="M50 160 L50 188 M268 112 L268 140 M160 180 L160 192 M160 12 L160 4"/>
+      <text class="t" x="50" y="198" text-anchor="middle">ناقل الحركة</text>
+      <text class="t" x="268" y="152" text-anchor="middle">عمود الإدارة</text>
+      <text class="t" x="180" y="198" text-anchor="start">دعامة القير</text>
+      <text class="t" x="195" y="28">تسريب الزيت</text>
+    </svg>
+   </div>
+   <div id="list-gear"></div>
+   <div class="field"><label for="n-gear">ملاحظات القير <em>Gearbox notes</em></label><textarea id="n-gear" data-pn="gear"></textarea></div>
+  </div>
+ </div>
+</section>
+
+<!-- PAGE 5 CHASSIS + SEND -->
+<section class="page" data-page="4">
+ <div class="sheet">
+  <div class="band" data-band="chassis"></div>
+  <div class="body">
+   <div data-fig="chassis" class="fig">
+    <svg viewBox="0 0 340 290" role="img" aria-label="رسم مبسط للشاسيه">
+      <rect class="f" x="86" y="30" width="16" height="22" rx="4"/><rect class="f" x="238" y="30" width="16" height="22" rx="4"/>
+      <rect class="f" x="86" y="226" width="16" height="22" rx="4"/><rect class="f" x="238" y="226" width="16" height="22" rx="4"/>
+      <path class="s" d="M94 40 H246 M94 237 H246"/>
+      <path class="f" d="M118 20 L118 270 M222 20 L222 270" style="fill:none"/>
+      <path class="s" d="M118 20 Q170 10 222 20 M118 270 Q170 280 222 270"/>
+      <path class="s" d="M118 80 H222 M118 140 H222 M118 200 H222"/>
+      <rect class="f" x="140" y="52" width="60" height="50" rx="8"/>
+      <rect class="f" x="150" y="118" width="40" height="64" rx="6"/>
+      <path class="s" d="M170 182 V254 Q170 262 182 262 H206"/>
+      <rect class="f" x="190" y="236" width="40" height="18" rx="9"/>
+      <circle class="s" cx="76" cy="41" r="9"/><circle class="s" cx="264" cy="41" r="9"/><circle class="s" cx="76" cy="237" r="9"/><circle class="s" cx="264" cy="237" r="9"/>
+      <path class="l" d="M118 52 L56 20 M222 150 L284 126 M86 41 L40 41 M94 237 L40 262 M206 262 L284 270 M110 110 L60 96"/>
+      <text class="t" x="56" y="14" text-anchor="end">نقاط التعليق</text>
+      <text class="t" x="288" y="124">الشاسيه</text>
+      <text class="t" x="36" y="44" text-anchor="end">الإطارات</text>
+      <text class="t" x="36" y="268" text-anchor="end">المحاور</text>
+      <text class="t" x="288" y="278">نظام العادم</text>
+      <text class="t" x="56" y="92" text-anchor="end">الفرامل</text>
+    </svg>
+   </div>
+   <div id="list-chassis"></div>
+   <div class="field"><label for="n-chassis">ملاحظات الشاسيه <em>Chassis notes</em></label><textarea id="n-chassis" data-pn="chassis"></textarea></div>
+
+   <div class="group-title">الملخص والإرسال <span class="hint">Summary &amp; send</span></div>
+   <div class="sum" id="sum"></div>
+   <div id="needs"></div>
+   <div class="lbl">لغة التقرير والرسالة <em>Language</em></div>
+   <div class="chips" id="lang"></div>
+   <button class="btn ghost" id="preview" type="button" style="width:100%;flex:none;margin-bottom:12px">معاينة التقرير (PDF)</button>
+   <div class="lbl">الرسالة اللي رح توصل الزبون</div>
+   <div class="msg" id="msgPreview" aria-live="polite"></div>
+   <p class="hint">بيفتح الواتساب برسالة قصيرة فيها رابط التقرير، والفاحص بيضغط "إرسال" فقط.</p>
+   <button class="btn ghost" id="copy" type="button" style="width:100%;flex:none">نسخ الرسالة</button>
+   <p class="hint" id="copyHint">إذا الواتساب ما انفتح، انسخ الرسالة والصقها في محادثة الزبون.</p>
+   <div class="err" id="err" role="alert"></div>
+   <details style="margin-top:8px"><summary class="hint">إعدادات رابط التقرير</summary>
+     <div class="field" style="margin-top:8px"><label for="baseUrl">رابط الموقع بعد الاستضافة <em>Site URL</em></label><input type="text" id="baseUrl" class="ltr" data-set="baseUrl" placeholder="https://your-site.netlify.app/"></div>
+     <p class="hint">الرابط المستخدم حالياً: <span id="baseShow" dir="ltr"></span></p>
+   </details>
+  </div>
+ </div>
+</section>
+
+</div>
+
+<div id="cust" hidden>
+ <div class="custin">
+  <div class="custhead"><b>تخصيص التطبيق</b><button class="btn" id="custClose" type="button" style="flex:none">تم</button></div>
+  <div class="sheet"><div class="body">
+    <div class="group-title" style="margin-top:0">الشعار (اللوغو)</div>
+    <div class="logoprev" id="logoPrev"></div>
+    <div class="edtool">
+      <label class="chip">اختر صورة<input type="file" accept="image/*" data-img="logo"></label>
+      <button type="button" class="chip" data-imgreset="logo">حذف الشعار</button>
+      <a class="chip" id="logoDl" download="logo.png" hidden>تنزيل logo.png</a>
+    </div>
+    <p class="hint">الشعار بيظهر بالتطبيق وبمعاينة التقرير على هالجهاز. لحتى يظهر بتقرير الزبون: نزّل logo.png من الزر فوق، وارفعه على GitHub بنفس مكان index.html وبنفس الاسم.</p>
+    <div id="custFields"></div>
+    <div class="group-title">صور الصفحات</div>
+    <p class="hint">الصورة بتحل مكان الرسم الافتراضي بالتطبيق (على هالجهاز).</p>
+    <div id="custFigs"></div>
+    <div class="group-title">نسخ احتياطي ونقل الإعدادات</div>
+    <p class="hint">بيحفظ كل تعديلاتك (البنود، الخيارات، النصوص، الشعار، الصور) بملف، لحتى تنقلها لجهاز تاني أو ترسلها لي لأثبتها بالموقع للجميع.</p>
+    <div class="edtool">
+      <button type="button" class="chip" id="expFile">تصدير الإعدادات (ملف)</button>
+      <button type="button" class="chip" id="expCopy">نسخ الإعدادات</button>
+      <label class="chip">استيراد من ملف<input type="file" accept=".json,application/json,text/plain" data-import></label>
+    </div>
+    <div class="field"><label for="impText">أو الصق الإعدادات هون</label><textarea id="impText" class="ltr" style="min-height:60px"></textarea></div>
+    <button type="button" class="btn ghost" id="impBtn" style="width:100%;flex:none">استيراد من النص</button>
+    <p class="hint" id="impMsg"></p>
+    <div class="group-title">استعادة</div>
+    <button type="button" class="btn ghost" id="brReset" style="width:100%;flex:none">استعادة كل النصوص الافتراضية</button>
+  </div></div>
+ </div>
+</div>
+
+<div id="reportRoot" hidden></div>
+
+<div class="nav"><div>
+  <button class="btn ghost" id="prev" type="button">السابق</button>
+  <button class="btn" id="next" type="button">التالي</button>
+  <a class="btn wa" id="send" href="#" target="_blank" rel="noopener" hidden>أرسل على الواتساب</a>
+</div></div>
+
+<script>
+const CENTER = 'الأصالة للفحص الفني';
+const PAGES = [['المركبة','Info'],['الهيكل','Body'],['المحرك','Engine'],['القير','Gearbox'],['الشاسيه','Chassis']];
+const SEC = {
+  body:{ar:'الهيكل الخارجي',items:[
+    ['paint','الدهان','Paint / Repair'],['dents','الدعسات والصدمات','Dents / Impacts'],['acc','تاريخ الحوادث','Accident History'],
+    ['doors','الأبواب','Doors'],['hood','الكبوت (غطاء المحرك)','Bonnet / Hood'],['roof','السقف','Roof'],
+    ['glass','الزجاج','Windows / Glass'],['mirrors','المرايات','Mirrors'],['lights','الإضاءة','Lights']]},
+  engine:{ar:'المحرك',items:[
+    ['eng','حالة المحرك','Engine Condition'],['oil','الزيوت والتسريبات','Oil / Leaks'],['pipes','الأنابيب والخراطيم','Pipes / Hoses'],
+    ['cool','نظام التبريد','Cooling System'],['batt','البطارية','Battery'],['air','فلتر الهواء','Air Filter']]},
+  gear:{ar:'ناقل الحركة',items:[
+    ['gb','حالة القير','Gearbox Condition'],['shift','تبديل السرعات','Gear Shifting'],['gleak','تسريب زيت القير','Gear Oil Leaks'],['gsup','دعامة القير','Gearbox Support']]},
+  chassis:{ar:'الشاسيه',items:[
+    ['frame','الشاسيه','Chassis Frame'],['cacc','حوادث / اكسيدنت','Chassis Accident'],['susp','التعليق','Suspension'],
+    ['axle','المحاور','Axles'],['tires','الإطارات','Tires'],['exh','نظام العادم','Exhaust System'],['brakes','الفرامل','Brakes']]}
+};
+const TYPES = ['سيدان','ستيشن','دفع رباعي SUV','أخرى'];
+const CONDS = [['excellent','ممتاز','Excellent'],['good','جيد','Good'],['fair','متوسط','Fair'],['attn','يحتاج صيانة','Needs attention']];
+const COND_AR = {excellent:'ممتاز',good:'جيد',fair:'متوسط',attn:'يحتاج صيانة'};
+let ST = [['ok','سليم','OK'],['needs','يحتاج','Needs'],['na','لا ينطبق','N/A']];
+const ST_AR = {ok:'سليم',needs:'يحتاج انتباه',na:'لا ينطبق'};
+
+const today = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+const fresh = () => ({page:0,info:{date:today()},vtype:'',cond:'',st:{},note:{},pn:{},lang:'ar',baseUrl:''});
+const BAKED = null; /*BAKED_CONFIG*/
+let EDIT=false;
+let S = fresh();
+try { const raw = localStorage.getItem('asala-draft'); if(raw){ const d=JSON.parse(raw); if(d && d.info) S = d; } } catch(e){}
+S.lang=S.lang||'ar'; S.baseUrl=S.baseUrl||'';
+let IMG={}; try{ IMG=JSON.parse(localStorage.getItem('asala-img')||'{}')||{}; }catch(e){}
+const saveImg = ()=>{ try{ localStorage.setItem('asala-img',JSON.stringify(IMG)); return true; }catch(e){ return false; } };
+const save = () => { try{ localStorage.setItem('asala-draft', JSON.stringify(S)); }catch(e){} };
+if(BAKED && (S.bakedV||0) < BAKED.v){ S.cfg=BAKED.cfg||null; S.br=BAKED.br||null; IMG={...(BAKED.img||{})}; S.bakedV=BAKED.v; saveImg(); save(); }
+
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+
+/* build checklists */
+$('#vtype').innerHTML = TYPES.map(t=>`<button type="button" class="chip" data-vt="${t}" aria-pressed="false">${t}</button>`).join('');
+$('#cond').innerHTML = CONDS.map(([v,a,e])=>`<button type="button" class="chip" data-cd="${v}" aria-pressed="false">${a}<small>${e}</small></button>`).join('');
+$('#lang').innerHTML = [['ar','العربية'],['fa','فارسی'],['en','English']].map(([v,t])=>`<button type="button" class="chip" data-lg="${v}" aria-pressed="false">${t}</button>`).join('');
+$('#steps').innerHTML = PAGES.map(([a,e],i)=>`<button type="button" class="step" data-go="${i}">${a}<small>${e}</small></button>`).join('');
+
+/* hydrate */
+function hydrate(){
+  $$('[data-info]').forEach(el=>{ el.value = S.info[el.dataset.info] || ''; });
+  $$('[data-pn]').forEach(el=>{ el.value = S.pn[el.dataset.pn] || ''; });
+  $$('[data-set]').forEach(el=>{ el.value = S[el.dataset.set] || ''; });
+  $$('[data-lg]').forEach(b=>b.setAttribute('aria-pressed', S.lang===b.dataset.lg));
+  $$('[data-vt]').forEach(b=>b.setAttribute('aria-pressed', S.vtype===b.dataset.vt));
+  $$('[data-cd]').forEach(b=>b.setAttribute('aria-pressed', S.cond===b.dataset.cd));
+  $$('.item:not(.edit)').forEach(it=>{
+    const id = it.dataset.id, v = S.st[id], itm = findItem(id);
+    $$('.seg button',it).forEach(b=>b.setAttribute('aria-pressed', b.dataset.v===v));
+    it.classList.toggle('has-need', !!itm && toneOf(itm,v)==='needs');
+    $('[data-inote]',it).value = S.note[id] || '';
+  });
+}
+
+/* events */
+document.addEventListener('input', e=>{
+  const t=e.target;
+  if(t.dataset.info){ S.info[t.dataset.info]=t.value; }
+  else if(t.dataset.pn){ S.pn[t.dataset.pn]=t.value; }
+  else if(t.dataset.inote){ S.note[t.dataset.inote]=t.value; }
+  else if(t.dataset.set){ S[t.dataset.set]=t.value; }
+  else if(t.dataset.oed){ const row=t.closest('.item.edit'); const it=SEC[row.dataset.k].items.find(x=>x[0]===row.dataset.eid); const oi=+t.closest('.orow').dataset.oi; if(it&&it[4]){ it[4][oi][t.dataset.oed]=t.value; saveCfg(); } return; }
+  else if(t.dataset.ed){ const row=t.closest('.item.edit'); const arr=SEC[row.dataset.k].items; const it=arr.find(x=>x[0]===row.dataset.eid); if(it){ it[+t.dataset.ed]=t.value; saveCfg(); } return; }
+  else return;
+  save(); if(S.page===4) renderSummary();
+});
+document.addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  if(b.dataset.go!==undefined){ go(+b.dataset.go); return; }
+  if(b.hasAttribute('data-optcustom')){ const row=b.closest('.item.edit'); const it=SEC[row.dataset.k].items.find(x=>x[0]===row.dataset.eid); it[4]=optsOf(it).map(o=>({...o})); saveCfg(); rebuild(); return; }
+  if(b.hasAttribute('data-optreset')){
+    if(b.dataset.armed!=='1'){ b.dataset.armed='1'; b.textContent='اضغط مرة ثانية للتأكيد'; return; }
+    const row=b.closest('.item.edit'); const it=SEC[row.dataset.k].items.find(x=>x[0]===row.dataset.eid); it.length=4; saveCfg(); rebuild(); return;
+  }
+  if(b.hasAttribute('data-oadd')){ const row=b.closest('.item.edit'); const it=SEC[row.dataset.k].items.find(x=>x[0]===row.dataset.eid); if(it[4]&&it[4].length<6){ it[4].push({i:newId(),a:'',f:'',e:'',t:'ok'}); saveCfg(); rebuild(); const rs=$$('.orow',$('.item.edit[data-eid="'+row.dataset.eid+'"]')); const last=rs[rs.length-1]; if(last){ last.scrollIntoView({block:'center'}); $('input',last).focus(); } } return; }
+  if(b.hasAttribute('data-odel')){
+    if(b.dataset.armed!=='1'){ b.dataset.armed='1'; b.textContent='تأكيد الحذف'; return; }
+    const row=b.closest('.item.edit'); const it=SEC[row.dataset.k].items.find(x=>x[0]===row.dataset.eid); const oi=+b.closest('.orow').dataset.oi;
+    if(it[4]&&it[4].length>2){ it[4].splice(oi,1); saveCfg(); rebuild(); } return;
+  }
+  if(b.dataset.otone){ const row=b.closest('.item.edit'); const it=SEC[row.dataset.k].items.find(x=>x[0]===row.dataset.eid); const oi=+b.closest('.orow').dataset.oi; it[4][oi].t=b.dataset.otone; saveCfg(); $$('[data-otone]',b.parentElement).forEach(x=>x.setAttribute('aria-pressed',x===b)); return; }
+  if(b.hasAttribute('data-edtoggle')){ EDIT=!EDIT; buildLists(); hydrate(); updateSteps(); return; }
+  if(b.hasAttribute('data-edreset')){
+    if(b.dataset.armed!=='1'){ b.dataset.armed='1'; b.textContent='اضغط مرة ثانية للتأكيد'; return; }
+    for(const k in SEC) SEC[k].items=JSON.parse(JSON.stringify(DEFAULT_SEC[k].items)); S.cfg=null; save(); buildLists(); hydrate(); updateSteps(); return;
+  }
+  if(b.dataset.add){ const k=b.dataset.add; SEC[k].items.push([newId(),'','','']); saveCfg(); buildLists(); hydrate(); const rows=$$('#list-'+k+' .item.edit'); const last=rows[rows.length-1]; if(last){ last.scrollIntoView({block:'center'}); const inp=$('input',last); if(inp) inp.focus(); } return; }
+  if(b.dataset.mv){ const row=b.closest('.item.edit'); const arr=SEC[row.dataset.k].items; const ix=arr.findIndex(x=>x[0]===row.dataset.eid); const j=ix+(+b.dataset.mv); if(j>=0&&j<arr.length){ [arr[ix],arr[j]]=[arr[j],arr[ix]]; saveCfg(); buildLists(); hydrate(); const r2=$$('#list-'+row.dataset.k+' .item.edit')[j]; if(r2) r2.scrollIntoView({block:'center'}); } return; }
+  if(b.hasAttribute('data-del')){
+    if(b.dataset.armed!=='1'){ b.dataset.armed='1'; b.textContent='تأكيد الحذف'; return; }
+    const row=b.closest('.item.edit'); const k=row.dataset.k; SEC[k].items=SEC[k].items.filter(x=>x[0]!==row.dataset.eid); saveCfg(); buildLists(); hydrate(); updateSteps(); return;
+  }
+  if(b.dataset.lg){ S.lang=b.dataset.lg; hydrate(); save(); renderSummary(); return; }
+  if(b.dataset.rl){ showReport(REP.d,b.dataset.rl,REP.preview); return; }
+  if(b.id==='rpPrint'){ window.print(); return; }
+  if(b.id==='rpBack'){ hideReport(); return; }
+  if(b.dataset.vt){ S.vtype = S.vtype===b.dataset.vt ? '' : b.dataset.vt; hydrate(); save(); return; }
+  if(b.dataset.cd){ S.cond = S.cond===b.dataset.cd ? '' : b.dataset.cd; hydrate(); save(); return; }
+  const it = b.closest('.item');
+  if(it && b.dataset.v){
+    const id = it.dataset.id;
+    S.st[id] = S.st[id]===b.dataset.v ? undefined : b.dataset.v;
+    if(S.st[id]===undefined) delete S.st[id];
+    hydrate(); save(); updateSteps(); if(S.page===4) renderSummary();
+  }
+});
+
+function go(i){
+  S.page = Math.max(0, Math.min(4,i));
+  $$('.page').forEach(p=>p.classList.toggle('on', +p.dataset.page===S.page));
+  $$('.step').forEach((s,idx)=> idx===S.page ? s.setAttribute('aria-current','step') : s.removeAttribute('aria-current'));
+  $('#prev').style.visibility = S.page===0 ? 'hidden':'visible';
+  $('#next').hidden = S.page===4;
+  $('#send').hidden = S.page!==4;
+  if(S.page===4) renderSummary();
+  window.scrollTo({top:0});
+  save();
+}
+$('#prev').onclick = ()=>go(S.page-1);
+$('#next').onclick = ()=>go(S.page+1);
+
+function updateSteps(){
+  const keys=['','body','engine','gear','chassis'];
+  $$('.step').forEach((s,i)=>{
+    if(!i) return;
+    const items = SEC[keys[i]].items, done = items.filter(it=>toneOf(it,S.st[keys[i]+'.'+it[0]])).length;
+    s.innerHTML = `${PAGES[i][0]}<small>${done}/${items.length}</small>`;
+  });
+  $$('.step')[0].innerHTML = `${PAGES[0][0]}<small>${PAGES[0][1]}</small>`;
+}
+
+/* summary + message */
+function counts(){
+  let ok=0,needs=0,na=0,open=0;
+  for(const k in SEC) for(const it of SEC[k].items){ const t=toneOf(it,S.st[k+'.'+it[0]]); if(t==='ok')ok++; else if(t==='needs')needs++; else if(t==='na')na++; else open++; }
+  return {ok,needs,na,open};
+}
+function buildMessage(){ return L[S.lang].msg(S.info.cName, LINK || baseUrl()); }
+function renderSummary(){
+  const c=counts();
+  $('#sum').innerHTML = `<div class="a">${c.ok}<small>سليم</small></div><div class="b">${c.needs}<small>يحتاج انتباه</small></div><div class="c">${c.na}<small>لا ينطبق</small></div>`;
+  const nl=[]; for(const k in SEC) for(const it of SEC[k].items) if(toneOf(it,S.st[k+'.'+it[0]])==='needs') nl.push(`<li>${esc(inm(it,'ar'))} <span class="hint">(${SEC[k].ar})</span></li>`);
+  $('#needs').innerHTML = nl.length ? `<ol class="needlist">${nl.join('')}</ol>` : '';
+  refreshLink();
+  $('#err').textContent = c.open ? `باقي ${c.open} بند بدون تقييم. بتقدر ترسل وبيطلعوا مو مذكورين.` : '';
+}
+function normPhone(p){
+  let d=(p||'').replace(/\D/g,'');
+  if(d.startsWith('00')) d=d.slice(2);
+  else if(d.startsWith('0')) d='971'+d.slice(1);
+  else if(d.length<=9) d='971'+d;
+  return d;
+}
+function sendUrl(){
+  const ph = normPhone(S.info.cPhone);
+  return ph.length<10 ? '#' : 'https://wa.me/'+ph+'?text='+encodeURIComponent(buildMessage());
+}
+$('#send').addEventListener('click', e=>{
+  const ph = normPhone(S.info.cPhone);
+  if(ph.length<10){ e.preventDefault(); $('#err').textContent='اكتب رقم واتساب الزبون في الصفحة الأولى قبل الإرسال.'; return; }
+  if(!baseUrl()){ e.preventDefault(); $('#err').textContent=NOBASE; const dt=$('details'); if(dt) dt.open=true; return; }
+  if(!LINK){ e.preventDefault(); refreshLink(); $('#err').textContent='عم يتجهز الرابط، اضغط مرة ثانية.'; return; }
+  $('#send').href = sendUrl();
+});
+$('#copy').onclick = async ()=>{
+  if(!baseUrl()){ $('#err').textContent=NOBASE; return; }
+  const text = buildMessage();
+  let ok=false;
+  try{ await navigator.clipboard.writeText(text); ok=true; }catch(e){}
+  if(!ok){
+    try{
+      const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.focus(); ta.select(); ok=document.execCommand('copy'); ta.remove();
+    }catch(e){}
+  }
+  $('#copyHint').textContent = ok ? 'تم نسخ الرسالة. الصقها في واتساب الزبون.' : 'ما انسخت تلقائياً. اضغط مطولاً على الرسالة فوق وانسخها.';
+};
+
+
+/* ===== report: languages ===== */
+const LOGO = '<svg viewBox="0 0 150 56" aria-hidden="true"><path d="M6 38 L8 30 Q10 26 20 25 L36 22 Q46 10 62 9 L84 9 Q96 10 104 22 L114 25 Q122 27 122 34 L122 38 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><circle cx="34" cy="40" r="7" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="96" cy="40" r="7" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="128" cy="22" r="17" fill="#0e7c86"/><path d="M119 22 l7 7 l12 -14" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const FA_ITEMS = {paint:'رنگ / ترمیم',dents:'فرورفتگی و ضربه‌خوردگی',acc:'سابقه تصادف',doors:'درب‌ها',hood:'کاپوت',roof:'سقف',glass:'شیشه‌ها',mirrors:'آینه‌ها',lights:'چراغ‌ها',
+  eng:'وضعیت موتور',oil:'روغن و نشتی',pipes:'لوله‌ها و شیلنگ‌ها',cool:'سیستم خنک‌کننده',batt:'باتری',air:'فیلتر هوا',
+  gb:'وضعیت گیربکس',shift:'تعویض دنده',gleak:'نشتی روغن گیربکس',gsup:'پایه گیربکس',
+  frame:'شاسی',cacc:'تصادف شاسی',susp:'سیستم تعلیق',axle:'محورها',tires:'لاستیک‌ها',exh:'سیستم اگزوز',brakes:'ترمزها'};
+for(const k in SEC) SEC[k].items = SEC[k].items.map(([id,ar,en])=>[id,ar,en,FA_ITEMS[id]||'']);
+const DEFAULT_SEC = JSON.parse(JSON.stringify(SEC));
+if(S.cfg){ try{ for(const k in S.cfg) if(SEC[k] && Array.isArray(S.cfg[k])) SEC[k].items=S.cfg[k]; }catch(e){} }
+const saveCfg = ()=>{ S.cfg={}; for(const k in SEC) S.cfg[k]=SEC[k].items; save(); };
+function inm(it,lang){ const ar=it[1]||'',en=it[2]||'',fa=it[3]||''; return lang==='ar'?(ar||en||fa):lang==='fa'?(fa||ar||en):(en||ar||fa); }
+function itemsOf(d,k){ return (d.it&&d.it[k]) || DEFAULT_SEC[k].items; }
+function newId(){ return 'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+
+const TONE_AR={ok:'أخضر',needs:'أصفر (يحتاج انتباه)',na:'رمادي'};
+function optsOf(it){
+  return it[4] || ['ok','needs','na'].map(v=>({i:v,t:v,a:L.ar[v],f:L.fa[v],e:L.en[v]}));
+}
+function olab(o,lang){ const a=o.a||'',f=o.f||'',e=o.e||''; return lang==='ar'?(a||e||f):lang==='fa'?(f||a||e):(e||a||f); }
+function toneOf(it,v){ if(!v) return null; const o=optsOf(it).find(x=>x.i===v); return o?o.t:null; }
+function findItem(kid){ const ix=kid.indexOf('.'); const k=kid.slice(0,ix), id=kid.slice(ix+1); return SEC[k] && SEC[k].items.find(x=>x[0]===id); }
+function rebuild(){ const y=window.scrollY; buildLists(); hydrate(); updateSteps(); window.scrollTo(0,y); }
+
+function optsEditor(it){
+  const custom=!!it[4], os=optsOf(it);
+  if(!custom){
+    return `<div class="opts"><div class="lbl">خيارات الإجابة</div><p class="hint">الافتراضي: ${os.map(o=>esc(olab(o,'ar'))).join(' / ')}</p><button type="button" class="chip" data-optcustom>تخصيص خيارات هذا البند</button></div>`;
+  }
+  return `<div class="opts"><div class="lbl">خيارات الإجابة</div>`+os.map((o,i)=>`
+    <div class="orow" data-oi="${i}">
+      <div class="field"><label>عربي</label><input type="text" data-oed="a" value="${esc(o.a)}"></div>
+      <div class="field"><label>فارسی</label><input type="text" data-oed="f" value="${esc(o.f)}"></div>
+      <div class="field"><label>English</label><input type="text" class="ltr" data-oed="e" value="${esc(o.e)}"></div>
+      <div class="tones">${['ok','needs','na'].map(t=>`<button type="button" class="chip" data-otone="${t}" aria-pressed="${o.t===t}">${TONE_AR[t]}</button>`).join('')}<button type="button" class="chip dng" data-odel ${os.length<=2?'disabled':''}>حذف</button></div>
+    </div>`).join('')
+  +`<button type="button" class="chip" data-oadd ${os.length>=6?'disabled':''}>+ إضافة خيار</button> <button type="button" class="chip" data-optreset>رجوع للخيارات الافتراضية</button></div>`;
+}
+function buildLists(){
+  for(const k in SEC){
+    const box=$('#list-'+k);
+    const tool=`<div class="edtool"><button type="button" class="chip" data-edtoggle aria-pressed="${EDIT}">✏️ ${EDIT?'تم، رجوع للفحص':'تعديل البنود'}</button>${EDIT?'<button type="button" class="chip" data-edreset>استعادة الافتراضي</button>':''}</div>`;
+    let rows;
+    if(EDIT){
+      rows=SEC[k].items.map((it,ix)=>{ const [id,ar,en,fa]=it; return `
+       <div class="item edit" data-k="${k}" data-eid="${id}">
+         <div class="field"><label>الاسم بالعربي</label><input type="text" data-ed="1" value="${esc(ar)}"></div>
+         <div class="field"><label>نام فارسی</label><input type="text" data-ed="3" value="${esc(fa)}"></div>
+         <div class="field"><label>English name</label><input type="text" class="ltr" data-ed="2" value="${esc(en)}"></div>
+         ${optsEditor(it)}
+         <div class="eact"><button type="button" class="chip" data-mv="-1" ${ix===0?'disabled':''} aria-label="فوق">↑</button><button type="button" class="chip" data-mv="1" ${ix===SEC[k].items.length-1?'disabled':''} aria-label="تحت">↓</button><button type="button" class="chip dng" data-del>حذف</button></div>
+       </div>`; }).join('')+`<button type="button" class="btn ghost addbtn" data-add="${k}">+ إضافة بند</button>`;
+    } else {
+      rows=SEC[k].items.map(it=>{ const [id]=it, ar=inm(it,'ar'), en=it[2]||'';
+        return `
+       <div class="item" data-id="${k}.${id}">
+         <div class="nm"><span>${esc(ar)}</span><small>${esc(en)}</small></div>
+         <div class="seg" role="group" aria-label="${esc(ar)}" style="--cols:${(()=>{const n=optsOf(it).length; return n<=3?n:(n===4?2:3);})()}">
+           ${optsOf(it).map(o=>`<button type="button" class="${o.t}" data-v="${esc(o.i)}" aria-pressed="false">${esc(olab(o,'ar'))}${(o.e&&olab(o,'ar')!==o.e)?`<small>${esc(o.e)}</small>`:''}</button>`).join('')}
+         </div>
+         <div class="inote"><input type="text" placeholder="شو المشكلة؟ (اختياري)" data-inote="${k}.${id}"></div>
+       </div>`; }).join('');
+    }
+    box.innerHTML=tool+rows;
+  }
+}
+const TYPE_TR = {'سيدان':['سيدان','سدان','Sedan'],'ستيشن':['ستيشن','استیشن','Station wagon'],'دفع رباعي SUV':['دفع رباعي SUV','شاسی‌بلند SUV','SUV'],'أخرى':['أخرى','سایر','Other']};
+const L = {
+ ar:{dir:'rtl',font:'"Cairo",sans-serif',center:'الأصالة للفحص الفني',centerEn:'AL ASALA VEHICLE TECHNICAL INSPECTION CENTER',tag:'سلامة • جودة • ثقة',
+  title:'تقرير فحص السيارة',titleEn:'VEHICLE INSPECTION REPORT',cust:'معلومات الزبون',veh:'معلومات السيارة',name:'اسم الزبون',model:'الموديل',plate:'رقم اللوحة',color:'اللون',vin:'رقم الشاسيه',date:'تاريخ الفحص',km:'عدد الكيلومترات',type:'نوع المركبة',
+  cond:'الحالة العامة',conds:{excellent:'ممتاز',good:'جيد',fair:'متوسط',attn:'يحتاج صيانة'},sum:'ملخص الفحص',ok:'سليم',needs:'يحتاج انتباه',na:'لا ينطبق',
+  notes:'ملاحظات',gnotes:'ملاحظات عامة',inspector:'اسم الفاحص',sig:'التوقيع',item:'البند',status:'الحالة',page:'صفحة',of:'من',attn:'البنود التي تحتاج انتباه',none:'لا توجد بنود تحتاج انتباه',
+  sections:{body:'الهيكل الخارجي',engine:'المحرك',gear:'ناقل الحركة',chassis:'الشاسيه والأسفل'},sn:{body:'Body / Exterior',engine:'Engine',gear:'Gearbox / Transmission',chassis:'Chassis / Underbody'},
+  save:'حفظ PDF',back:'رجوع',
+  msg:(n,u)=>`مرحباً${n?' '+n:''}،\nتقرير فحص سيارتك من الأصالة للفحص الفني جاهز. اضغط على الرابط لعرضه:\n${u}`},
+ fa:{dir:'rtl',font:'"Vazirmatn","Cairo",sans-serif',center:'مرکز بازرسی فنی الاصاله',centerEn:'AL ASALA VEHICLE TECHNICAL INSPECTION CENTER',tag:'ایمنی • کیفیت • اعتماد',
+  title:'گزارش بازرسی خودرو',titleEn:'VEHICLE INSPECTION REPORT',cust:'اطلاعات مشتری',veh:'اطلاعات خودرو',name:'نام مشتری',model:'مدل',plate:'شماره پلاک',color:'رنگ',vin:'شماره شاسی',date:'تاریخ بازرسی',km:'کارکرد (کیلومتر)',type:'نوع خودرو',
+  cond:'وضعیت کلی',conds:{excellent:'عالی',good:'خوب',fair:'متوسط',attn:'نیاز به تعمیر'},sum:'خلاصه بازرسی',ok:'سالم',needs:'نیاز به توجه',na:'مرتبط نیست',
+  notes:'توضیحات',gnotes:'توضیحات کلی',inspector:'نام بازرس',sig:'امضا',item:'مورد',status:'وضعیت',page:'صفحه',of:'از',attn:'مواردی که نیاز به توجه دارند',none:'موردی که نیاز به توجه داشته باشد وجود ندارد',
+  sections:{body:'بدنه / نمای بیرونی',engine:'موتور',gear:'گیربکس',chassis:'شاسی و زیربدنه'},sn:{body:'Body / Exterior',engine:'Engine',gear:'Gearbox / Transmission',chassis:'Chassis / Underbody'},
+  save:'ذخیره PDF',back:'بازگشت',
+  msg:(n,u)=>`سلام${n?' '+n:''}،\nگزارش بازرسی خودروی شما از مرکز بازرسی فنی الاصاله آماده است. برای مشاهده روی لینک بزنید:\n${u}`},
+ en:{dir:'ltr',font:'"Cairo",system-ui,sans-serif',center:'Al Asala Technical Inspection',centerEn:'AL ASALA VEHICLE TECHNICAL INSPECTION CENTER',tag:'Safety • Quality • Trust',
+  title:'Vehicle Inspection Report',titleEn:'',cust:'Customer',veh:'Vehicle',name:'Customer name',model:'Model',plate:'Plate number',color:'Color',vin:'Chassis / VIN',date:'Inspection date',km:'Mileage (km)',type:'Vehicle type',
+  cond:'General condition',conds:{excellent:'Excellent',good:'Good',fair:'Fair',attn:'Needs attention'},sum:'Summary',ok:'OK',needs:'Needs attention',na:'N/A',
+  notes:'Notes',gnotes:'General notes',inspector:'Inspector',sig:'Signature',item:'Item',status:'Status',page:'Page',of:'of',attn:'Items needing attention',none:'No items need attention',
+  sections:{body:'Body / Exterior',engine:'Engine',gear:'Gearbox / Transmission',chassis:'Chassis / Underbody'},sn:{body:'',engine:'',gear:'',chassis:''},
+  save:'Save PDF',back:'Back',
+  msg:(n,u)=>`Hello${n?' '+n:''},\nYour vehicle inspection report from Al Asala Technical Inspection Center is ready. Tap the link to view it:\n${u}`}
+};
+
+/* ===== report: link encoding ===== */
+const b64u = bytes => { let t=''; bytes.forEach(x=>t+=String.fromCharCode(x)); return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+const unb64u = str => { str=str.replace(/-/g,'+').replace(/_/g,'/'); while(str.length%4) str+='='; return Uint8Array.from(atob(str),c=>c.charCodeAt(0)); };
+async function encodeData(obj){
+  const bytes = new TextEncoder().encode(JSON.stringify(obj));
+  if(window.CompressionStream){
+    try{ const buf = await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer(); return 'z.'+b64u(new Uint8Array(buf)); }catch(e){}
+  }
+  return 'u.'+b64u(bytes);
+}
+async function decodeData(str){
+  const kind=str.slice(0,2); let out=unb64u(str.slice(2));
+  if(kind==='z.') out = new Uint8Array(await new Response(new Blob([out]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
+  return JSON.parse(new TextDecoder().decode(out));
+}
+function payload(){
+  const info={...S.info}; delete info.cPhone;
+  const it={}; for(const k in SEC) it[k]=SEC[k].items;
+  return {v:1,l:S.lang,i:info,vt:S.vtype,c:S.cond,s:S.st,n:S.note,p:S.pn,it,br:S.br||null};
+}
+function baseUrl(){
+  const c=(S.baseUrl||'').trim();
+  if(c) return /^https?:\/\//i.test(c) ? c.split('#')[0] : 'https://'+c.split('#')[0];
+  if(/claudeusercontent\.com$/i.test(location.hostname)) return HOSTED;
+  if(!/^https?:/.test(location.protocol)) return HOSTED;
+  if(/claudeusercontent\.com$/i.test(location.hostname)) return '';
+  return location.href.split('#')[0];
+}
+const HOSTED='https://obaidaexpert-wq.github.io/Al-asala/';
+const NOBASE='اكتب رابط الموقع بعد الاستضافة (تحت، بإعدادات رابط التقرير). رابط Claude ما بيفتح عند الزبون.';
+let LINK='', linkTimer;
+function refreshLink(){
+  clearTimeout(linkTimer);
+  linkTimer=setTimeout(async()=>{
+    const base=baseUrl();
+    $('#baseShow').textContent = base || '—';
+    if(!base){
+      LINK=''; $('#send').href='#';
+      $('#msgPreview').textContent='—';
+      $('#err').textContent=NOBASE;
+      const dt=$('details'); if(dt) dt.open=true;
+      return;
+    }
+    LINK = base+'#r='+await encodeData(payload());
+    $('#msgPreview').textContent = buildMessage();
+    $('#send').href = sendUrl();
+  },150);
+}
+
+/* ===== report: rendering ===== */
+const esc = v => String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LI = {ar:0,fa:1,en:2};
+function cnt(d){ const c={ok:0,needs:0,na:0,open:0}; for(const k in SEC) for(const it of itemsOf(d,k)){ const t=toneOf(it,(d.s||{})[k+'.'+it[0]]); if(t) c[t]++; else c.open++; } return c; }
+function rtable(k,d,lang,T){
+  const rows=itemsOf(d,k).map(it=>{ const id=it[0], v=(d.s||{})[k+'.'+id], nt=(d.n||{})[k+'.'+id], o=optsOf(it).find(x=>x.i===v);
+    return `<tr><td class="in">${esc(inm(it,lang))}</td><td><span class="st ${o?o.t:'none'}">${o?esc(olab(o,lang)):'—'}</span></td><td class="nt">${esc(nt||'')}</td></tr>`; }).join('');
+  return `<table class="rt"><thead><tr><th>${T.item}</th><th>${T.status}</th><th>${T.notes}</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function reportHTML(d,lang,preview){
+  const T=L[lang], i=d.i||{}, c=cnt(d), n=(d.p||{});
+  const rh=(big)=>`<div class="rh${big?' big':''}"><div class="rlogo">${reportLogo()}</div><div class="rname"><b>${T.center}</b><span dir="ltr">${T.centerEn}</span><i>${T.tag}</i></div></div>`;
+  const rf=(x)=>`<div class="rf"><span>${T.center}</span><span>${T.page} ${x} ${T.of} 4</span></div>`;
+  const band=(k)=>`<div class="rband">${T.sections[k]}<span dir="ltr">${T.sn[k]}</span></div>`;
+  const nbox=(label,txt)=>`<div class="nbox"><b>${label}</b><p>${esc(txt||'')}</p></div>`;
+  const kv=(l,v,ltr)=>`<div><span>${l}</span><b${ltr?' dir="ltr"':''}>${esc(v||'—')}</b></div>`;
+  const vt = d.vt ? (TYPE_TR[d.vt]||[d.vt,d.vt,d.vt])[LI[lang]] : '';
+  let nl=''; for(const k in SEC){ const rows=itemsOf(d,k).filter(it=>toneOf(it,(d.s||{})[k+'.'+it[0]])==='needs').map(it=>{ const t=(d.n||{})[k+'.'+it[0]]; return `<li>${esc(inm(it,lang))}${t?': '+esc(t):''}</li>`; }); if(rows.length) nl+=`<h4>${T.sections[k]}</h4><ul>${rows.join('')}</ul>`; }
+  const tool=`<div class="rtool">${[['ar','العربية'],['fa','فارسی'],['en','English']].map(([v,t])=>`<button type="button" class="chip" data-rl="${v}" aria-pressed="${v===lang}">${t}</button>`).join('')}<button type="button" class="btn" id="rpPrint">${T.save}</button>${preview?`<button type="button" class="btn ghost" id="rpBack">${T.back}</button>`:''}</div>`;
+  const p1=`<section class="rpage">${rh(true)}
+    <div class="rband">${T.title}<span dir="ltr">${T.titleEn}</span></div>
+    <h3>${T.cust}</h3><div class="kv">${kv(T.name,i.cName)}${kv(T.date,i.date,true)}</div>
+    <h3>${T.veh}</h3><div class="kv">${kv(T.model,i.model)}${kv(T.plate,i.plate,true)}${kv(T.color,i.color)}${kv(T.km,i.km,true)}${kv(T.vin,i.vin,true)}${kv(T.type,vt)}</div>
+    <h3>${T.cond}</h3><div class="cb">${['excellent','good','fair','attn'].map(k=>`<div class="${d.c===k?'on':''}">${T.conds[k]}</div>`).join('')}</div>
+    <h3>${T.sum}</h3><div class="cs"><div class="a">${c.ok}<small>${T.ok}</small></div><div class="b">${c.needs}<small>${T.needs}</small></div><div class="c">${c.na}<small>${T.na}</small></div></div>
+    ${nbox(T.gnotes,i.gnotes)}
+    <div class="sigs"><div><p>${esc(i.inspector||'')}</p>${T.inspector}</div><div><p>&nbsp;</p>${T.sig}</div></div>
+    ${rf(1)}</section>`;
+  const p2=`<section class="rpage">${rh(false)}${band('body')}${rtable('body',d,lang,T)}${nbox(T.notes,n.body)}${rf(2)}</section>`;
+  const p3=`<section class="rpage">${rh(false)}${band('engine')}${rtable('engine',d,lang,T)}${nbox(T.notes,n.engine)}${band('gear')}${rtable('gear',d,lang,T)}${nbox(T.notes,n.gear)}${rf(3)}</section>`;
+  const p4=`<section class="rpage">${rh(false)}${band('chassis')}${rtable('chassis',d,lang,T)}${nbox(T.notes,n.chassis)}
+    <h3>${T.attn}</h3><div class="attn">${nl||`<p>${T.none}</p>`}</div>${rf(4)}</section>`;
+  return tool+p1+p2+p3+p4;
+}
+let REP={d:null,lang:'ar',preview:false};
+function showReport(d,lang,preview){
+  REP={d,lang,preview};
+  $('.app').hidden=true; $('.nav').hidden=true;
+  const root=$('#reportRoot'); root.hidden=false;
+  root.style.fontFamily=L[lang].font;
+  applyBranding(d.br);
+  root.innerHTML=reportHTML(d,lang,preview);
+  $$('#reportRoot img[data-host]').forEach(im=>{ const fb=()=>{ const w=document.createElement('span'); w.innerHTML=LOGO; im.replaceWith(w.firstChild); }; im.onerror=fb; if(im.complete && im.naturalWidth===0 && im.getAttribute('src')) setTimeout(()=>{ if(im.isConnected && im.naturalWidth===0) fb(); },0); });
+  document.documentElement.lang=lang==='fa'?'fa':lang; document.documentElement.dir=L[lang].dir;
+  document.title=(L[lang].title+' '+((d.i&&d.i.plate)||'')).trim();
+  window.scrollTo({top:0});
+}
+function hideReport(){
+  applyBranding(S.br);
+  $('#reportRoot').hidden=true; $('.app').hidden=false; $('.nav').hidden=false;
+  document.documentElement.lang='ar'; document.documentElement.dir='rtl'; document.title='الأصالة للفحص الفني';
+}
+$('#preview').onclick = ()=>showReport(payload(), S.lang, true);
+
+
+/* ===== branding / customization ===== */
+const L_DEF={}; for(const lg of ['ar','fa','en']){ const T=L[lg]; L_DEF[lg]={center:T.center,centerEn:T.centerEn,tag:T.tag,ok:T.ok,needs:T.needs,na:T.na,sections:{...T.sections},sn:{...T.sn}}; }
+function applyBranding(br){
+  br=br||{};
+  for(const lg of ['ar','fa','en']){
+    const T=L[lg], D=L_DEF[lg];
+    T.center=(br.c&&br.c[lg])||D.center;
+    T.centerEn=br.ce||D.centerEn;
+    T.tag=(br.t&&br.t[lg])||D.tag;
+    for(const v of ['ok','needs','na']) T[v]=(br.st&&br.st[v]&&br.st[v][lg])||D[v];
+    for(const k in D.sections){ const sv=(br.s&&br.s[k])||{}; T.sections[k]=sv[lg]||D.sections[k]; T.sn[k]= lg==='en' ? '' : (sv.en||D.sn[k]); }
+  }
+}
+function applyChrome(){
+  $('#brName').textContent=L.ar.center; $('#brEn').textContent=L.ar.centerEn; $('#brTag').textContent=L.ar.tag;
+  document.title=L.ar.center;
+  ST=[['ok',L.ar.ok,L.en.ok],['needs',L.ar.needs,L.en.needs],['na',L.ar.na,L.en.na]];
+  const nums={body:'١',engine:'٢',gear:'٣',chassis:'٤'};
+  $$('[data-band]').forEach(el=>{ const k=el.dataset.band; el.innerHTML=`${nums[k]}. ${esc(L.ar.sections[k])} <span>${esc(L.ar.sn[k]||L.en.sections[k])}</span>`; });
+}
+const FIG0={};
+function applyImages(){
+  const lg = IMG.logo ? `<img class="logoimg" src="${IMG.logo}" alt="">` : LOGO;
+  $('#brandLogo').innerHTML=lg; $('#logoPrev').innerHTML=lg;
+  const dl=$('#logoDl'); dl.hidden=!IMG.logo; if(IMG.logo) dl.href=IMG.logo;
+  $$('[data-fig]').forEach(f=>{ const k=f.dataset.fig, o=FIG0[k];
+    if(IMG[k]){ f.classList.remove('row'); f.innerHTML=`<img class="figimg" src="${IMG[k]}" alt="">`; }
+    else { f.innerHTML=o.html; f.classList.toggle('row',o.row); } });
+  $$('[data-figprev]').forEach(el=>{ const k=el.dataset.figprev; el.innerHTML= IMG[k]?`<img class="figimg" src="${IMG[k]}" alt="">`:'<span class="hint">الرسم الافتراضي</span>'; });
+}
+function reportLogo(){
+  return IMG.logo ? `<img class="logoimg" src="${IMG.logo}" alt="">` : `<img class="logoimg" data-host src="logo.png" alt="">`;
+}
+const getPath=(o,p)=>p.split('.').reduce((a,k)=>a&&a[k],o);
+function setPath(o,p,v){ const ks=p.split('.'); let a=o; ks.slice(0,-1).forEach(k=>{ a=a[k]=a[k]||{}; }); a[ks[ks.length-1]]=v; }
+function buildCust(){
+  const f3=(base,D)=>['ar','fa','en'].map((lg,i)=>({path:base+'.'+lg,label:['عربي','فارسی','English'][i],ph:D[lg],ltr:lg==='en'}));
+  const groups=[
+    ['اسم المركز', f3('c',{ar:L_DEF.ar.center,fa:L_DEF.fa.center,en:L_DEF.en.center})],
+    ['الاسم الإنكليزي الكامل (السطر الصغير تحت الاسم)', [{path:'ce',label:'English',ph:L_DEF.ar.centerEn,ltr:true}]],
+    ['العبارة تحت الاسم (Slogan)', f3('t',{ar:L_DEF.ar.tag,fa:L_DEF.fa.tag,en:L_DEF.en.tag})],
+  ];
+  const names={body:'عنوان صفحة الهيكل',engine:'عنوان صفحة المحرك',gear:'عنوان صفحة القير',chassis:'عنوان صفحة الشاسيه'};
+  for(const k in names) groups.push([names[k], f3('s.'+k,{ar:L_DEF.ar.sections[k],fa:L_DEF.fa.sections[k],en:L_DEF.en.sections[k]})]);
+  const sn={ok:'اسم حالة: سليم',needs:'اسم حالة: يحتاج انتباه',na:'اسم حالة: لا ينطبق'};
+  for(const v in sn) groups.push([sn[v], f3('st.'+v,{ar:L_DEF.ar[v],fa:L_DEF.fa[v],en:L_DEF.en[v]})]);
+  $('#custFields').innerHTML=groups.map(([t,fs])=>`<div class="cgrp"><b>${t}</b>${fs.map(f=>`<div class="field"><label>${f.label}</label><input type="text" data-br="${f.path}" placeholder="${esc(f.ph)}"${f.ltr?' class="ltr"':''}></div>`).join('')}</div>`).join('');
+  $('#custFigs').innerHTML=['body','engine','gear','chassis'].map(k=>`<div class="figrow"><b>${esc(L.ar.sections[k])}</b><div class="figprev" data-figprev="${k}"></div><div class="edtool"><label class="chip">اختر صورة<input type="file" accept="image/*" data-img="${k}"></label><button type="button" class="chip" data-imgreset="${k}">رجوع للرسم الافتراضي</button></div></div>`).join('');
+}
+function hydrateCust(){ $$('[data-br]').forEach(el=>{ el.value=getPath(S.br||{},el.dataset.br)||''; }); }
+function fileToDataURL(file,maxW,type){
+  return new Promise(res=>{
+    const url=URL.createObjectURL(file), img=new Image();
+    img.onload=()=>{ const sc=Math.min(1,maxW/img.width), c=document.createElement('canvas'); c.width=Math.max(1,Math.round(img.width*sc)); c.height=Math.max(1,Math.round(img.height*sc));
+      const g=c.getContext('2d'); if(type==='jpeg'){ g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height); } g.drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(url);
+      res(c.toDataURL(type==='png'?'image/png':'image/jpeg',0.85)); };
+    img.onerror=()=>{ URL.revokeObjectURL(url); res(null); };
+    img.src=url;
+  });
+}
+document.addEventListener('change', async e=>{
+  const t=e.target; if(!t.dataset || !t.dataset.img) return;
+  const f=t.files&&t.files[0]; if(!f) return; const k=t.dataset.img;
+  const url=await fileToDataURL(f, k==='logo'?420:900, k==='logo'?'png':'jpeg'); t.value='';
+  if(!url) return;
+  const old=IMG[k]; IMG[k]=url;
+  if(!saveImg()){ if(old) IMG[k]=old; else delete IMG[k]; alert('الصورة كبيرة أو الذاكرة ممتلئة. جرّب صورة أصغر.'); return; }
+  applyImages();
+});
+document.addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.id==='custBtn'){ hydrateCust(); applyImages(); $('#cust').hidden=false; $('#cust').scrollTop=0; return; }
+  if(b.id==='custClose'){ $('#cust').hidden=true; return; }
+  if(b.dataset.imgreset){ delete IMG[b.dataset.imgreset]; saveImg(); applyImages(); return; }
+  if(b.id==='brReset'){
+    if(b.dataset.armed!=='1'){ b.dataset.armed='1'; b.textContent='اضغط مرة ثانية للتأكيد'; return; }
+    b.dataset.armed=''; b.textContent='استعادة كل النصوص الافتراضية';
+    S.br=null; save(); applyBranding(null); applyChrome(); buildLists(); hydrate(); hydrateCust(); return;
+  }
+});
+document.addEventListener('input', e=>{
+  const t=e.target; if(!t.dataset || !t.dataset.br) return;
+  S.br=S.br||{}; setPath(S.br,t.dataset.br,t.value);
+  applyBranding(S.br); applyChrome(); buildLists(); hydrate(); save();
+});
+
+
+/* ===== export / import settings ===== */
+function settingsJSON(){ return JSON.stringify({v:1,cfg:S.cfg||null,br:S.br||null,img:IMG}); }
+function applySettings(text){
+  let d; try{ d=JSON.parse(text); }catch(e){ $('#impMsg').textContent='النص غير صالح.'; return; }
+  if(!d || typeof d!=='object' || !('cfg' in d || 'br' in d || 'img' in d)){ $('#impMsg').textContent='هاد مو ملف إعدادات صحيح.'; return; }
+  S.cfg=d.cfg||null; S.br=d.br||null; IMG=d.img||{};
+  S.bakedV = BAKED ? BAKED.v : S.bakedV;
+  if(!saveImg()){ $('#impMsg').textContent='الصور كبيرة ما انحفظت على الجهاز.'; }
+  save(); $('#impMsg').textContent='تم الاستيراد. عم أحدّث الصفحة...'; setTimeout(()=>location.reload(),500);
+}
+document.addEventListener('click', async e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.id==='expFile'){
+    try{ const blob=new Blob([settingsJSON()],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='asala-settings.json'; document.body.appendChild(a); a.click(); a.remove(); $('#impMsg').textContent='تم تنزيل asala-settings.json'; }catch(err){ $('#impMsg').textContent='ما قدر ينزّل الملف، جرّب "نسخ الإعدادات".'; }
+    return;
+  }
+  if(b.id==='expCopy'){
+    const text=settingsJSON(); let ok=false;
+    try{ await navigator.clipboard.writeText(text); ok=true; }catch(err){}
+    if(!ok){ try{ const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); ok=document.execCommand('copy'); ta.remove(); }catch(err){} }
+    $('#impMsg').textContent= ok ? 'تم النسخ.' : 'ما انسخ تلقائياً، استخدم "تصدير الإعدادات (ملف)".';
+    return;
+  }
+  if(b.id==='impBtn'){ applySettings($('#impText').value); return; }
+});
+document.addEventListener('change', async e=>{
+  const t=e.target; if(!t.hasAttribute || !t.hasAttribute('data-import')) return;
+  const f=t.files&&t.files[0]; if(!f) return; const text=await f.text(); t.value=''; applySettings(text);
+});
+/* ===== start ===== */
+
+/* theme */
+$('#themeBtn').onclick = ()=>{
+  const r=document.documentElement;
+  const dark = r.dataset.theme ? r.dataset.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  r.dataset.theme = dark ? 'light':'dark';
+};
+
+if(/^#r=/.test(location.hash)){
+  $('.app').hidden=true; $('.nav').hidden=true;
+  decodeData(location.hash.slice(3)).then(d=>showReport(d,d.l||'ar',false)).catch(()=>{ const r=$('#reportRoot'); r.hidden=false; r.innerHTML='<p style="padding:24px;text-align:center">الرابط غير صالح / Invalid link</p>'; });
+} else {
+  $$('[data-fig]').forEach(f=>{ FIG0[f.dataset.fig]={html:f.innerHTML,row:f.classList.contains('row')}; });
+  buildCust(); applyBranding(S.br); applyChrome(); applyImages(); buildLists(); hydrate(); updateSteps(); go(S.page);
+}
+</script>
+</body>
+</html>
